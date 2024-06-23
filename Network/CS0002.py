@@ -1,3 +1,5 @@
+# password cracker
+
 import hashlib
 
 type_of_hash = str(input("Which thype of hash you want to bruteforce ?"))
