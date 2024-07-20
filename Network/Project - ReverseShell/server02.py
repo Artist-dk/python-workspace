@@ -64,3 +64,21 @@ def accepting_connection():
             print("Connection has been established : "+address[0])
         except:
             print("Error accepting connections")
+
+# 2nd Thread functions -1) see all the clients 2) Select a client 3) Send commands to the connnected client
+
+# Interactive prompt for sending commands
+
+def start_turtle():
+    cmd = input('turtle> ')
+
+    if cmd == 'list':
+        list_connections()
+
+    elif "select" in cmd:
+        conn = get_target(cmd)
+        if conn is not None:
+            send_target_commands(conn)
+    
+    else:
+        print("command not recongnized")
