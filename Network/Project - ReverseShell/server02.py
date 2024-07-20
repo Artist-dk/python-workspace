@@ -70,18 +70,18 @@ def accepting_connection():
 # Interactive prompt for sending commands
 
 def start_turtle():
-    cmd = input('turtle> ')
+    while True:
+        cmd = input('turtle> ')
+        if cmd == 'list':
+            list_connections()
 
-    if cmd == 'list':
-        list_connections()
-
-    elif "select" in cmd:
-        conn = get_target(cmd)
-        if conn is not None:
-            send_target_commands(conn)
-    
-    else:
-        print("command not recongnized")
+        elif "select" in cmd:
+            conn = get_target(cmd)
+            if conn is not None:
+                send_target_commands(conn)
+        
+        else:
+            print("command not recongnized")
 
 # Display all current active connections with the client
 
@@ -129,3 +129,33 @@ def send_target_commands(conn):
                 print(client_response, end="")
         except:
             print("Error sending commands")
+            break
+
+# create worker threads
+def create_workers():
+    for _ in range(NUMBER_OF_THREADS):
+        t = threading.Thread(target=work)
+        t.daemon = True
+        t.start()
+
+# do next job that is int the queue (Handle connections, send commands)
+def work():
+    while True:
+        x = queue.get()
+        if x == 1:
+            create_socket()
+            bind_socket()
+            accepting_connection()
+        if x == 2:
+            start_turtle()
+
+        queue.task_done()
+
+def create_jobs():
+    for x in JOB_NUMBER:
+        queue.put(x)
+
+    queue.join()
+
+create_workers()
+create_jobs()
