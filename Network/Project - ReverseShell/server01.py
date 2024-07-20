@@ -1,17 +1,6 @@
 import socket
 import sys
 
-import threading
-import time
-from queue import Queue
-
-NUMBER_OF_THREADS = 2
-JOB_NUMBER = [1, 2]
-
-queue = Queue()
-all_connections = []
-all_address = []
-
 # create a socket ( connect to computers )
 def create_socket():
     try:
