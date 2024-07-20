@@ -1,12 +1,12 @@
-import sockets
+import socket
 import os
 import subprocess
 
 s = socket.socket()
-host = '198.168.0.105'
+host = '127.0.0.1'
 port = 9999
 
-s.connect(host, port)
+s.connect((host, port))
 
 while True:
     data = s.recv(1024)
