@@ -1,6 +1,5 @@
 import socket
 import sys
-
 import threading
 import time
 from queue import Queue
@@ -42,3 +41,26 @@ def bind_socket():
     except socket.error as msg:
         print("Socket Binding error" +str(msg)+"Retrying...")
         bind_socket()
+
+# Handling connection from multiple clients and saving to a list
+
+# Closing previous connections when server.py file is restarted
+
+def accepting_connection():
+    for c in all_connections:
+        c.close()
+
+    del all_connections[:]
+    del all_address[:]
+
+    while True:
+        try:
+            conn, address = s.accept()
+            s.setblocking(1) # prevents timeout
+
+            all_connections.append(conn)
+            all_address.append(address)
+
+            print("Connection has been established : "+address[0])
+        except:
+            print("Error accepting connections")
