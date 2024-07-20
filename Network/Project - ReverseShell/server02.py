@@ -107,7 +107,7 @@ def get_target(cmd):
         target = cmd.replace("select ","")  # target = id
         target = int(target)
         conn = all_connections[target]
-        print("You care now connected to: " + str(all_address[target][0]))
+        print("You are now connected to: " + str(all_address[target][0]))
         print(str(all_address[target][0]) + ">", end="")
 
     except:
