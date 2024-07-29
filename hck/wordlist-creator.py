@@ -1,7 +1,8 @@
 import itertools
-import time
 import os
-import psutil  # For memory management
+import time
+import gc
+import sys
 
 wordcount = 0
 batchcount = 0
@@ -18,9 +19,6 @@ def generate_wordlist(characters, min_length, max_length):
     for length in range(min_length, max_length + 1):
         num_combinations = len(characters) ** length
         total_combinations += num_combinations
-
-    update_interval = 5
-    last_update_time = time.time()
 
     batch_size = 10000000
     current_batch = []
@@ -39,6 +37,10 @@ def generate_wordlist(characters, min_length, max_length):
                 batch_index += 1
                 batchcount += 1
 
+            # Update terminal output
+            if wordcount % 100000 == 0:
+                print_progress(batch_index, wordcount, total_combinations)
+
     # Save any remaining words in the last batch
     if current_batch:
         save_wordlist_to_file(current_batch, 'wordlist', batch_index)
@@ -46,6 +48,7 @@ def generate_wordlist(characters, min_length, max_length):
         batch_index += 1
         batchcount += 1
 
+    print_progress(batch_index, wordcount, total_combinations, final=True)
     return wordlist
 
 def save_wordlist_to_file(wordlist, base_filename, batch_index):
@@ -56,35 +59,26 @@ def save_wordlist_to_file(wordlist, base_filename, batch_index):
 
     filename = f'wordlists/{base_filename}_{batch_index}.txt'
     with open(filename, 'w') as file:
-        file.write('\n'.join(wordlist) + '\n')
+        file.write('\n'.join(wordlist))
 
-    print(f"Batch {batch_index} saved to '{filename}'")
-    print(f"Word count: {wordcount} -> {total_combinations}, Batch count: {batchcount}")
-    print("---")
-
-def aggregate_wordlists(base_filename, num_batches):
-    with open(f'wordlists/{base_filename}_aggregate.txt', 'w') as aggregate_file:
-        for batch_index in range(1, num_batches + 1):
-            filename = f'wordlists/{base_filename}_{batch_index}.txt'
-            with open(filename, 'r') as batch_file:
-                lines = batch_file.readlines()
-                aggregate_file.writelines(lines)
-            print(f"Content of batch {batch_index} appended to aggregate file.")
+    sys.stdout.write(f"\n[+] Batch {batch_index} saved to '{filename}'\n")
+    sys.stdout.flush()
 
 def clear_memory():
-    import gc
     gc.collect()
 
+def print_progress(batch_index, wordcount, total_combinations, final=False):
+    progress_msg = f"Batch {batch_index}, Word count: {wordcount}/{total_combinations} ({wordcount / total_combinations * 100:.2f}%)"
+    sys.stdout.write('\r' + progress_msg + ' ' * (80 - len(progress_msg)))
+    sys.stdout.flush()
+    if final:
+        # Print the final message on a new line
+        sys.stdout.write('\n')
+        sys.stdout.flush()
+
 if __name__ == "__main__":
-    characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~"
+    characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\" "
     min_length = 4
-    max_length = 7
+    max_length = 5
 
     generate_wordlist(characters, min_length, max_length)
-
-    num_batches = batchcount
-
-    # Aggregate all batch files into one
-    aggregate_wordlists('wordlist', num_batches)
-
-    print(f"All batches aggregated and saved to 'wordlists/wordlist_aggregate.txt'")
