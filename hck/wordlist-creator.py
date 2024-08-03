@@ -1,24 +1,21 @@
 import itertools
 import os
-import time
 import gc
 import sys
 
 wordcount = 0
 batchcount = 0
+batch_index = 0
 total_combinations = 0
+filename = ''
+wordlist_directory = '/media/kernel/KERNEL-ntfs/wordlist/temp'
 
 def generate_wordlist(characters, min_length, max_length):
     global wordcount
     global batchcount
     global total_combinations
 
-    wordlist = []
-
-    total_combinations = 0
-    for length in range(min_length, max_length + 1):
-        num_combinations = len(characters) ** length
-        total_combinations += num_combinations
+    total_combinations = sum(len(characters) ** length for length in range(min_length, max_length + 1))
 
     batch_size = 10000000
     current_batch = []
@@ -37,11 +34,9 @@ def generate_wordlist(characters, min_length, max_length):
                 batch_index += 1
                 batchcount += 1
 
-            # Update terminal output
             if wordcount % 100000 == 0:
                 print_progress(batch_index, wordcount, total_combinations)
 
-    # Save any remaining words in the last batch
     if current_batch:
         save_wordlist_to_file(current_batch, 'wordlist', batch_index)
         clear_memory()
@@ -49,36 +44,63 @@ def generate_wordlist(characters, min_length, max_length):
         batchcount += 1
 
     print_progress(batch_index, wordcount, total_combinations, final=True)
-    return wordlist
+    return current_batch
 
 def save_wordlist_to_file(wordlist, base_filename, batch_index):
-    global wordcount
-    global total_combinations
-
-    os.makedirs('wordlists', exist_ok=True)
-
-    filename = f'wordlists/{base_filename}_{batch_index}.txt'
+    global wordlist_directory
+    global filename
+    os.makedirs(wordlist_directory, exist_ok=True)
+    filename = f'{wordlist_directory}/{base_filename}_{batch_index}.txt'
     with open(filename, 'w') as file:
         file.write('\n'.join(wordlist))
-
-    sys.stdout.write(f"\n[+] Batch {batch_index} saved to '{filename}'\n")
     sys.stdout.flush()
 
 def clear_memory():
     gc.collect()
 
 def print_progress(batch_index, wordcount, total_combinations, final=False):
-    progress_msg = f"Batch {batch_index}, Word count: {wordcount}/{total_combinations} ({wordcount / total_combinations * 100:.2f}%)"
-    sys.stdout.write('\r' + progress_msg + ' ' * (80 - len(progress_msg)))
+    global filename
+    
+    progress_percent = (wordcount / total_combinations) * 100
+    bar_length = 40
+    
+    
+    filled_length = int(bar_length * wordcount / total_combinations)
+    empty_length = bar_length - filled_length
+
+    filled_color = '\033[91m'
+    empty_color = '\033[90m'
+    reset_color = '\033[0m'
+
+    red_color = '\033[91m'
+
+    bar = filled_color + '█' * filled_length + empty_color + '█' * empty_length + reset_color
+    
+    
+    progress_msg = f"""\
+
+Batch No.:           {batch_index}{red_color}
+Saved words:         {wordcount}{reset_color}
+Total combinations:  {total_combinations}
+[+] New batch        {filename}
+
+{bar} {progress_percent:.2f}%
+
+
+"""
+    
+    # Clear previous message (15 lines)
+    sys.stdout.write('\033[F\033[K' * 15)
+    sys.stdout.write(progress_msg)
     sys.stdout.flush()
+    
     if final:
-        # Print the final message on a new line
         sys.stdout.write('\n')
         sys.stdout.flush()
 
 if __name__ == "__main__":
     characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\" "
-    min_length = 4
-    max_length = 5
+    min_length = 1
+    max_length = 4
 
     generate_wordlist(characters, min_length, max_length)
