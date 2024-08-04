@@ -4,9 +4,10 @@ import gc
 import sys
 import time
 
-min_length = 4
-max_length = 5
-characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\""
+min_length = 6
+max_length = 7
+characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\""
 filename = ''
 wordlist_directory = 'K:/wordlist/temp'
 
@@ -39,16 +40,16 @@ class ProgressMsg:
 
     def calculate_required_storage_size(self, min_length, max_length, total_combinations):
         avg_word_length = (min_length + max_length) / 2
-        avg_word_size = avg_word_length + 1  # considering '\n' at the end of each word
+        avg_word_size = avg_word_length + 1
         total_size = total_combinations * avg_word_size
-        self.size_mb = total_size / (1024 ** 2)  # Convert bytes to MB
-        self.size_gb = total_size / (1024 ** 3)  # Convert bytes to GB
-        self.size_tb = total_size / (1024 ** 4)  # Convert bytes to TB
+        self.size_mb = total_size / (1024 ** 2)
+        self.size_gb = total_size / (1024 ** 3)
+        self.size_tb = total_size / (1024 ** 4)
 
     def calculate_used_storage(self, used_storage):
-        self.used_storage_mb = used_storage / (1024 ** 2)  # Convert bytes to MB
-        self.used_storage_gb = used_storage / (1024 ** 3)  # Convert bytes to GB
-        self.used_storage_tb = used_storage / (1024 ** 4)  # Convert bytes to TB
+        self.used_storage_mb = used_storage / (1024 ** 2)
+        self.used_storage_gb = used_storage / (1024 ** 3)
+        self.used_storage_tb = used_storage / (1024 ** 4)
 
     def format_time(self, seconds):
         units = [
@@ -92,36 +93,36 @@ class ProgressMsg:
         filled_length = int(bar_length * self.wordcount / self.total_combinations)
         empty_length = bar_length - filled_length
 
-        filled_color = '\033[91m'     # Light Red
-        empty_color = '\033[90m'      # Dark Gray
-        reset_color = '\033[0m'       # Reset
-        red_color = '\033[91m'        # Light Red
+        filled_color = '\033[91m'
+        empty_color = '\033[90m'
+        reset_color = '\033[0m'
+        red_color = '\033[91m'
 
-        black_color = '\033[30m'      # Black
-        red_bold_color = '\033[31m'   # Bold Red
-        green_color = '\033[32m'      # Green
-        yellow_color = '\033[33m'     # Yellow
-        blue_color = '\033[34m'       # Blue
-        magenta_color = '\033[35m'    # Magenta
-        cyan_color = '\033[36m'       # Cyan
-        white_color = '\033[37m'      # White
+        black_color = '\033[30m'
+        red_bold_color = '\033[31m'
+        green_color = '\033[32m'
+        yellow_color = '\033[33m'
+        blue_color = '\033[34m'
+        magenta_color = '\033[35m'
+        cyan_color = '\033[36m'
+        white_color = '\033[37m'
 
-        bright_black_color = '\033[90m'   # Bright Black (Dark Gray)
-        bright_red_color = '\033[91m'     # Bright Red
-        bright_green_color = '\033[92m'   # Bright Green
-        bright_yellow_color = '\033[93m'  # Bright Yellow
-        bright_blue_color = '\033[94m'    # Bright Blue
-        bright_magenta_color = '\033[95m' # Bright Magenta
-        bright_cyan_color = '\033[96m'    # Bright Cyan
-        bright_white_color = '\033[97m'   # Bright White
+        bright_black_color = '\033[90m'
+        bright_red_color = '\033[91m'
+        bright_green_color = '\033[92m'
+        bright_yellow_color = '\033[93m'
+        bright_blue_color = '\033[94m'
+        bright_magenta_color = '\033[95m'
+        bright_cyan_color = '\033[96m'
+        bright_white_color = '\033[97m'
 
-        underline_red_color = '\033[4;31m'        # Underline Red
-        underline_green_color = '\033[4;32m'      # Underline Green
-        underline_yellow_color = '\033[4;33m'     # Underline Yellow
-        underline_blue_color = '\033[4;34m'       # Underline Blue
-        underline_magenta_color = '\033[4;35m'    # Underline Magenta
-        underline_cyan_color = '\033[4;36m'       # Underline Cyan
-        underline_white_color = '\033[4;37m'      # Underline White
+        underline_red_color = '\033[4;31m'
+        underline_green_color = '\033[4;32m'
+        underline_yellow_color = '\033[4;33m'
+        underline_blue_color = '\033[4;34m'
+        underline_magenta_color = '\033[4;35m'
+        underline_cyan_color = '\033[4;36m'
+        underline_white_color = '\033[4;37m'
 
         bar = filled_color + '█' * filled_length + empty_color + '█' * empty_length + reset_color
 
