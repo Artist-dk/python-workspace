@@ -3,12 +3,14 @@ import os
 import gc
 import sys
 
+min_length = 19
+max_length = 20
 wordcount = 0
 batchcount = 0
 batch_index = 0
 total_combinations = 0
 filename = ''
-wordlist_directory = '/media/kernel/KERNEL-ntfs/wordlist/temp'
+wordlist_directory = 'K:/wordlist/temp'
 
 def generate_wordlist(characters, min_length, max_length):
     global wordcount
@@ -23,7 +25,7 @@ def generate_wordlist(characters, min_length, max_length):
 
     for length in range(min_length, max_length + 1):
         for combination in itertools.product(characters, repeat=length):
-            word = ''.join(combination)
+            word = ''.join(combination).strip()
             wordcount += 1
             current_batch.append(word)
 
@@ -99,8 +101,8 @@ Total combinations:  {total_combinations}
         sys.stdout.flush()
 
 if __name__ == "__main__":
-    characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\" "
-    min_length = 1
-    max_length = 4
+    characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\""
+    # global min_length
+    # global max_length
 
     generate_wordlist(characters, min_length, max_length)
