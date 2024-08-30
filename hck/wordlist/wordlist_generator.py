@@ -1,6 +1,7 @@
 import itertools
 import os
-from utils import clear_memory
+import sys
+import gc
 
 def generate_wordlist(characters, min_length, max_length, wordlist_directory, progress):
     wordcount = 0
@@ -48,3 +49,6 @@ def update_progress(progress, wordcount, used_storage, batch_index, filename):
     sys.stdout.write('\033[F\033[K' * 19)
     sys.stdout.write(progress.progress_msg)
     sys.stdout.flush()
+
+def clear_memory():
+    gc.collect()

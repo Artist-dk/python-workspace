@@ -2,7 +2,7 @@ import sys
 import time
 from wordlist_generator import generate_wordlist
 from email_generator import generate_email_list, domains
-from .utils import ProgressMsg, clear_memory
+from progress_msg import ProgressMsg
 
 min_length = 6
 max_length = 7
@@ -40,4 +40,4 @@ def main():
     sys.stdout.flush()
 
 if __name__ == "__main__":
-  main()
+    main()

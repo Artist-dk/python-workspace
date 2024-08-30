@@ -1,7 +1,8 @@
 import itertools
 import os
+import sys
+import gc
 import random
-from utils import clear_memory
 
 domains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"]
 
@@ -53,3 +54,6 @@ def update_progress(progress, wordcount, used_storage, batch_index, filename):
     sys.stdout.write('\033[F\033[K' * 19)
     sys.stdout.write(progress.progress_msg)
     sys.stdout.flush()
+
+def clear_memory():
+    gc.collect()
