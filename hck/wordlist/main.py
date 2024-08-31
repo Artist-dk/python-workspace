@@ -1,43 +1,25 @@
-import sys
-import time
-from wordlist_generator import generate_wordlist
-from email_generator import generate_email_list, domains
+# main.py
 from progress_msg import ProgressMsg
-
-min_length = 6
-max_length = 7
-characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-wordlist_directory = 'K:/wordlist/temp'
+from wordlist_generator import generate_wordlist
+from email_generator import generate_emails
+import config  # Import the configuration variables from config.py
 
 def main():
-    generate_emails = False
-    if len(sys.argv) > 1 and sys.argv[1] == "--emails":
-        generate_emails = True
-
     progress = ProgressMsg()
-    if generate_emails:
-        total_combinations = sum(len(characters) ** length for length in range(min_length, max_length + 1))
-        progress.total_combinations = total_combinations
-        progress.calculate_required_storage_size(min_length, max_length, total_combinations)
 
-        start_time = time.time()
-        generate_email_list(characters, min_length, max_length, wordlist_directory, domains, progress)
+    print("Select the type of list you want to generate:")
+    print("1. Passwords")
+    print("2. Email IDs")
+    choice = input("Enter 1 or 2: ")
+
+    if choice == "1":
+        print("Generating Passwords...")
+        generate_wordlist(config.characters, config.min_length, config.max_length, config.wordlist_directory, progress)
+    elif choice == "2":
+        print("Generating Email IDs...")
+        generate_emails(config.characters, config.min_length, config.max_length, config.wordlist_directory, progress)
     else:
-        total_combinations = sum(len(characters) ** length for length in range(min_length, max_length + 1))
-        progress.total_combinations = total_combinations
-        progress.calculate_required_storage_size(min_length, max_length, total_combinations)
-
-        start_time = time.time()
-        generate_wordlist(characters, min_length, max_length, wordlist_directory, progress)
-
-    progress.elapsed_time = time.time() - start_time
-    progress.update_remaining_time_chunks(
-        (progress.elapsed_time / (progress.wordcount / progress.total_combinations)) - progress.elapsed_time
-    )
-    progress.generate_progress_msg()
-    sys.stdout.write('\033[F\033[K' * 25)
-    sys.stdout.write(progress.progress_msg)
-    sys.stdout.flush()
+        print("Invalid choice. Please run the program again and select a valid option.")
 
 if __name__ == "__main__":
     main()
