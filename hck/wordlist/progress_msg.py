@@ -1,3 +1,5 @@
+# progress_msg.py
+
 class ProgressMsg:
     def __init__(self):
         self.batch_index = 0
@@ -86,12 +88,17 @@ Batch No.:           {self.batch_index}
 Saved words:         {self.wordcount}
 Total words:         {self.total_combinations}
 Elapsed time:        {self.format_time(self.elapsed_time)}
-Remaining time:      {self.remaining_time_seconds:.2f} s, {self.remaining_time_minutes:.2f} m, {self.remaining_time_hours:.2f} h, {self.remaining_time_days:.2f} d, {self.remaining_time_months:.2f} m, {self.remaining_time_years:.2f} y
+Remaining time:
+    S: {self.remaining_time_seconds:.2f}
+    M: {self.remaining_time_minutes:.2f}
+    H: {self.remaining_time_hours:.2f}
+    D: {self.remaining_time_days:.2f}
+    M: {self.remaining_time_months:.2f}
+    Y: {self.remaining_time_years:.2f}
 Required storage:    {self.size_mb:.2f} MB / {self.size_gb:.2f} GB / {self.size_tb:.2f} TB
 Used storage:        {self.used_storage_mb:.2f} MB / {self.used_storage_gb:.2f} GB / {self.used_storage_tb:.2f} TB
 [+] New batch        {self.filename}
 
 {bar} {progress_percent:08.5f}%
-
 
 """

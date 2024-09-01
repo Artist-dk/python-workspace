@@ -4,8 +4,8 @@ import time
 
 # Configuration settings
 BATCH_SIZE = 1000  # Number of email IDs per batch file
-OUTPUT_DIRECTORY = 'generated_emails'
-DOMAINS = ['gmail.com']  # List of domains to use for email generation
+OUTPUT_DIRECTORY = '/home/kernel/Desktop/Wordlist/email'
+DOMAINS = ['example.com', 'sample.org']  # List of domains to use for email generation
 SEPARATORS = ['', '.', '_']  # List of separators to use between first and last names
 
 class EmailProgressMsg:
@@ -27,23 +27,14 @@ class EmailProgressMsg:
         self.progress_msg = ''
 
     def calculate_total_combinations(self, num_names, domains, separators):
-        """
-        Calculate the total number of email ID combinations.
-        """
         self.total_combinations = (num_names * (num_names - 1)) * len(domains) * len(separators)
 
     def calculate_used_storage(self, used_storage):
-        """
-        Calculate the used storage in various units.
-        """
         self.used_storage_mb = used_storage / (1024 ** 2)
         self.used_storage_gb = used_storage / (1024 ** 3)
         self.used_storage_tb = used_storage / (1024 ** 4)
 
     def format_time(self, seconds):
-        """
-        Format time in a human-readable format (seconds, minutes, hours, etc.).
-        """
         units = [
             ("second", 60), 
             ("minute", 60), 
@@ -64,9 +55,6 @@ class EmailProgressMsg:
         return ', '.join(reversed(time_str))
 
     def update_remaining_time_chunks(self, remaining_seconds):
-        """
-        Update the remaining time in chunks (seconds, minutes, hours, etc.).
-        """
         units = [60, 60, 24, 30.44, 12]
         time_values = []
         remaining_time = remaining_seconds
@@ -79,9 +67,6 @@ class EmailProgressMsg:
         self.remaining_time_days, self.remaining_time_months, self.remaining_time_years = time_values
 
     def generate_progress_msg(self):
-        """
-        Generate a formatted progress message to display the current progress of the email generation.
-        """
         progress_percent = (self.email_count / self.total_combinations) * 100 if self.total_combinations else 0
         bar_length = 40
         filled_length = int(bar_length * self.email_count / self.total_combinations) if self.total_combinations else 0
@@ -114,9 +99,6 @@ Used storage:        {self.used_storage_mb:.2f} MB / {self.used_storage_gb:.2f} 
 """
 
     def update_progress(self, batch_index, email_count, elapsed_time, remaining_seconds, used_storage, filename):
-        """
-        Update all progress information and regenerate the progress message.
-        """
         self.batch_index = batch_index
         self.email_count = email_count
         self.elapsed_time = elapsed_time
@@ -126,17 +108,11 @@ Used storage:        {self.used_storage_mb:.2f} MB / {self.used_storage_gb:.2f} 
         self.generate_progress_msg()
 
 def generate_email_ids(first_name, last_name, domains, separators):
-    """
-    Generate email IDs using permutations of names, domains, and separators.
-    """
     for domain in domains:
         for separator in separators:
             yield f"{first_name}{separator}{last_name}@{domain}"
 
 def save_emails_to_file(email_batch, output_directory, batch_index):
-    """
-    Save a batch of email IDs to a file.
-    """
     os.makedirs(output_directory, exist_ok=True)
     filename = os.path.join(output_directory, f'emails_{batch_index}.txt')
     with open(filename, 'w') as file:
@@ -188,4 +164,4 @@ def generate_and_save_emails(names_file, batch_size, output_directory, domains, 
         print(progress.progress_msg)
 
 if __name__ == "__main__":
-    generate_and_save_emails('../common/names.txt', BATCH_SIZE, OUTPUT_DIRECTORY, DOMAINS, SEPARATORS)
+    generate_and_save_emails('./common/names.txt', BATCH_SIZE, OUTPUT_DIRECTORY, DOMAINS, SEPARATORS)

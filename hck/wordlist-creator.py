@@ -9,7 +9,7 @@ max_length = 7
 characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 # characters = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=`~\""
 filename = ''
-wordlist_directory = 'K:/wordlist/temp'
+wordlist_directory = '/home/kernel/Desktop/Wordlist/temp'
 
 wordcount = 0
 batchcount = 0
@@ -188,7 +188,7 @@ def generate_wordlist(characters, min_length, max_length):
                 progress.filename = filename
                 progress.calculate_used_storage(used_storage)
                 progress.generate_progress_msg()
-                sys.stdout.write('\033[F\033[K' * 19)
+                sys.stdout.write('\033[F\033[K' * 20)
                 sys.stdout.write(progress.progress_msg)
                 sys.stdout.flush()
 
