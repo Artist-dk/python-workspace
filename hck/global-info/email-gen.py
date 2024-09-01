@@ -1,10 +1,14 @@
 import re
+import gc
+import os
 from itertools import permutations
 
 # File paths
-input_file = 'names.txt'
-output_file = 'emails.txt'
+input_file = '../common/names.txt'
+output_file_prefix = 'emails_batch'
 domain = 'example.com'
+batch_size = 1000  # Number of emails per batch file
+batch_counter = 1  # Counter for batch files
 
 def normalize_name(name):
     # Convert to lowercase and replace only the first space with a single dot
@@ -48,14 +52,35 @@ def generate_email_variations(name, domain):
 
     return variations
 
+def write_emails_to_file(emails, batch_number):
+    output_file = f"{output_file_prefix}_{batch_number}.txt"
+    with open(output_file, 'w') as outfile:
+        for email in emails:
+            outfile.write(email + '\n')
+    print(f"Batch file {output_file} created.")
+
+# Initialize
+emails_buffer = []
+
 # Read names from the input file and generate all possible emails
-with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+with open(input_file, 'r') as infile:
     for line in infile:
         name = line.strip()
         if name:
             normalized_name = normalize_name(name)
             emails = generate_email_variations(normalized_name, domain)
+            
+            # Write emails to the file in chunks
             for email in emails:
-                outfile.write(email + '\n')
+                emails_buffer.append(email)
+                if len(emails_buffer) >= batch_size:
+                    write_emails_to_file(emails_buffer, batch_counter)
+                    emails_buffer = []  # Clear the buffer
+                    batch_counter += 1
+                    gc.collect()  # Request garbage collection
 
-print(f"All possible email addresses have been generated and saved to {output_file}.")
+# Write any remaining emails in the buffer to the last batch file
+if emails_buffer:
+    write_emails_to_file(emails_buffer, batch_counter)
+
+print("All possible email addresses have been generated and saved in batch files.")

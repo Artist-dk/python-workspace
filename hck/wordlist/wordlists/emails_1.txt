@@ -1,0 +1,8 @@
+john.doe@example.com
+john.doe@sample.org
+doe.john@example.com
+doe.john@sample.org
+john_doe@example.com
+john_doe@sample.org
+doe_john@example.com
+doe_john@sample.org
