@@ -1,0 +1,3 @@
+pyttx module in python is used to read text and generate audio
+
+string is immutable in python
